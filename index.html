@@ -25,40 +25,106 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        // プレイヤー
-        let player = {
+        // ===== プレイヤー =====
+        const player = {
             x: canvas.width / 2,
             y: canvas.height - 100,
-            size: 50,
-            speed: 10
+            size: 60
         };
 
-        // タッチ操作
-        let touchX = null;
-
+        // ===== タッチ操作 =====
         window.addEventListener("touchmove", (e) => {
-            touchX = e.touches[0].clientX;
+            player.x = e.touches[0].clientX;
         });
 
-        // ゲームループ
-        function update() {
-            if (touchX !== null) {
-                player.x = touchX;
-            }
+        // ===== コメント =====
+        const comments = [];
+
+        function spawnComment() {
+            comments.push({
+                x: Math.random() * canvas.width,
+                //↑コメント自体のサイズを考慮しておらず見切れるコメントが出そう.
+                //↑てかこれ中心の座標か左上の座標かわからん。後者なら後のplayerBoxで態々変換するのは二度手間そう.
+                y: -50,
+                size: 40,
+                //↑プレイヤーとコメントは同サイズって言った気がするのにサイズ違う.
+                speed: 5
+            });
         }
 
+        // 1秒ごとに生成
+        setInterval(spawnComment, 1000);
+
+        // ===== 当たり判定 =====
+        function isColliding(a, b) {
+            return (
+                a.x < b.x + b.size &&
+                a.x + a.size > b.x &&
+                a.y < b.y + b.size &&
+                a.y + a.size > b.y
+            );
+        }
+
+        // ===== 更新 =====
+        function update() {
+
+        for (let i = comments.length - 1; i >= 0; i--) {
+
+            const c = comments[i];
+
+            // 落下
+            c.y += c.speed;
+
+            // 当たり判定
+            const playerBox = {
+                x: player.x - player.size / 2,
+                y: player.y - player.size / 2,
+                size: player.size
+            };
+
+            if (isColliding(playerBox, c)) {
+                comments.splice(i, 1);
+                // ↑(i, 1)の1ってなんだ？余分に消えない？.
+            continue;
+            }
+
+            // 画面外削除
+            if (c.y > canvas.height) {
+                comments.splice(i, 1);
+            }
+        }
+        }
+
+        // ===== 描画 =====
         function draw() {
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+            // プレイヤー
             ctx.fillStyle = "white";
+
             ctx.fillRect(
                 player.x - player.size / 2,
                 player.y - player.size / 2,
                 player.size,
                 player.size
             );
+
+            // コメント
+            ctx.fillStyle = "lime";
+
+            for (const c of comments) {
+                ctx.fillRect(
+                    c.x,
+                    c.y,
+                    c.size,
+                    c.size
+                );
+            }
+            // ここみるにプレイヤーは中心, コメントは左上で座標管理してるのね。文法的に良くてもきもくない？.
         }
 
+        // ===== ループ =====
         function gameLoop() {
             update();
             draw();
@@ -66,6 +132,7 @@
         }
 
         gameLoop();
+        
     </script>
 
 </body>
