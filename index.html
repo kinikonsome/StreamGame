@@ -25,11 +25,14 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
+        // ===== 定数 =====
+        const OBJECT_SIZE = 60;
+
         // ===== プレイヤー =====
         const player = {
             x: canvas.width / 2,
             y: canvas.height - 100,
-            size: 60
+            size: OBJECT_SIZE
         };
 
         // ===== タッチ操作 =====
@@ -41,13 +44,11 @@
         const comments = [];
 
         function spawnComment() {
+
             comments.push({
-                x: Math.random() * canvas.width,
-                //↑コメント自体のサイズを考慮しておらず見切れるコメントが出そう.
-                //↑てかこれ中心の座標か左上の座標かわからん。後者なら後のplayerBoxで態々変換するのは二度手間そう.
-                y: -50,
-                size: 40,
-                //↑プレイヤーとコメントは同サイズって言った気がするのにサイズ違う.
+                x: OBJECT_SIZE / 2 + Math.random() * (canvas.width - OBJECT_SIZE),
+                y: -OBJECT_SIZE,
+                size: OBJECT_SIZE,
                 speed: 5
             });
         }
@@ -57,42 +58,36 @@
 
         // ===== 当たり判定 =====
         function isColliding(a, b) {
+
             return (
-                a.x < b.x + b.size &&
-                a.x + a.size > b.x &&
-                a.y < b.y + b.size &&
-                a.y + a.size > b.y
+                Math.abs(a.x - b.x) < (a.size + b.size) / 2 &&
+                Math.abs(a.y - b.y) < (a.size + b.size) / 2
             );
         }
 
         // ===== 更新 =====
         function update() {
 
-        for (let i = comments.length - 1; i >= 0; i--) {
+            for (let i = comments.length - 1; i >= 0; i--) {
 
-            const c = comments[i];
+                const c = comments[i];
 
-            // 落下
-            c.y += c.speed;
+                // 落下
+                c.y += c.speed;
 
-            // 当たり判定
-            const playerBox = {
-                x: player.x - player.size / 2,
-                y: player.y - player.size / 2,
-                size: player.size
-            };
+                // 当たり判定
+                if (isColliding(player, c)) {
 
-            if (isColliding(playerBox, c)) {
-                comments.splice(i, 1);
-                // ↑(i, 1)の1ってなんだ？余分に消えない？.
-            continue;
+                    comments.splice(i, 1);
+                    continue;
+                }
+
+                // 画面外削除
+                if (c.y - c.size / 2 > canvas.height) {
+
+                    comments.splice(i, 1);
+                }
             }
-
-            // 画面外削除
-            if (c.y > canvas.height) {
-                comments.splice(i, 1);
-            }
-        }
         }
 
         // ===== 描画 =====
@@ -114,25 +109,26 @@
             ctx.fillStyle = "lime";
 
             for (const c of comments) {
+
                 ctx.fillRect(
-                    c.x,
-                    c.y,
+                    c.x - c.size / 2,
+                    c.y - c.size / 2,
                     c.size,
                     c.size
                 );
             }
-            // ここみるにプレイヤーは中心, コメントは左上で座標管理してるのね。文法的に良くてもきもくない？.
         }
 
         // ===== ループ =====
         function gameLoop() {
+
             update();
             draw();
+
             requestAnimationFrame(gameLoop);
         }
 
         gameLoop();
-        
     </script>
 
 </body>
