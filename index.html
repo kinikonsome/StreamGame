@@ -1,135 +1,141 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>Test Game</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
-        canvas {
-            background: #111;
-            display: block;
-        }
-    </style>
-</head>
-<body>
-
-    <canvas id="game"></canvas>
-
-    <script>
-        const canvas = document.getElementById("game");
-        const ctx = canvas.getContext("2d");
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        // ===== 定数 =====
-        const OBJECT_SIZE = 60;
-
-        // ===== プレイヤー =====
-        const player = {
-            x: canvas.width / 2,
-            y: canvas.height - 100,
-            size: OBJECT_SIZE
-        };
-
-        // ===== タッチ操作 =====
-        window.addEventListener("touchmove", (e) => {
-            player.x = e.touches[0].clientX;
-        });
-
-        // ===== コメント =====
-        const comments = [];
-
-        function spawnComment() {
-
-            comments.push({
-                x: OBJECT_SIZE / 2 + Math.random() * (canvas.width - OBJECT_SIZE),
-                y: -OBJECT_SIZE,
-                size: OBJECT_SIZE,
-                speed: 5
-            });
-        }
-
-        // 1秒ごとに生成
-        setInterval(spawnComment, 1000);
-
-        // ===== 当たり判定 =====
-        function isColliding(a, b) {
-
-            return (
-                Math.abs(a.x - b.x) < (a.size + b.size) / 2 &&
-                Math.abs(a.y - b.y) < (a.size + b.size) / 2
-            );
-        }
-
-        // ===== 更新 =====
-        function update() {
-
-            for (let i = comments.length - 1; i >= 0; i--) {
-
-                const c = comments[i];
-
-                // 落下
-                c.y += c.speed;
-
-                // 当たり判定
-                if (isColliding(player, c)) {
-
-                    comments.splice(i, 1);
-                    continue;
-                }
-
-                // 画面外削除
-                if (c.y - c.size / 2 > canvas.height) {
-
-                    comments.splice(i, 1);
-                }
+    <head>
+        <meta charset="UTF-8">
+        <title>Test Game</title>
+        <style>
+            body {
+                margin: 0;
             }
-        }
 
-        // ===== 描画 =====
-        function draw() {
+            #topMiddle {
+                display: block;
+                background: #ffa4ff;
+            }
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            #bottom {
+                display: block;
+                background: #efe78b;
+            }
+        </style>
+    </head>
+    <body>
 
-            // プレイヤー
-            ctx.fillStyle = "white";
+        <canvas id="topMiddle"></canvas>
+        <canvas id="bottom"></canvas>
 
-            ctx.fillRect(
-                player.x - player.size / 2,
-                player.y - player.size / 2,
-                player.size,
-                player.size
-            );
+        <script>
+            const canvasA = document.getElementById("topMiddle");
+            const ctx = canvasA.getContext("2d");
 
-            // コメント
-            ctx.fillStyle = "lime";
+            canvasA.width = window.innerWidth;
+            canvasA.height = window.innerHeight * 0.8;
 
-            for (const c of comments) {
+            // ===== 定数 =====
+            const OBJECT_SIZE = 60;
 
-                ctx.fillRect(
-                    c.x - c.size / 2,
-                    c.y - c.size / 2,
-                    c.size,
-                    c.size
+            // ===== プレイヤー =====
+            const player = {
+                x: canvasA.width / 2,
+                y: canvasA.height - 100,
+                size: OBJECT_SIZE
+            };
+
+            // ===== タッチ操作 =====
+            window.addEventListener("touchmove", (e) => {
+                player.x = e.touches[0].clientX;
+            });
+
+            // ===== コメント =====
+            const comments = [];
+
+            function spawnComment() {
+
+                comments.push({
+                    x: OBJECT_SIZE / 2 + Math.random() * (canvasA.width - OBJECT_SIZE),
+                    y: -OBJECT_SIZE,
+                    size: OBJECT_SIZE,
+                    speed: 5
+                });
+            }
+
+            // 1秒ごとに生成
+            setInterval(spawnComment, 1000);
+
+            // ===== 当たり判定 =====
+            function isColliding(a, b) {
+
+                return (
+                    Math.abs(a.x - b.x) < (a.size + b.size) / 2 &&
+                    Math.abs(a.y - b.y) < (a.size + b.size) / 2
                 );
             }
-        }
 
-        // ===== ループ =====
-        function gameLoop() {
+            // ===== 更新 =====
+            function update() {
 
-            update();
-            draw();
+                for (let i = comments.length - 1; i >= 0; i--) {
 
-            requestAnimationFrame(gameLoop);
-        }
+                    const c = comments[i];
 
-        gameLoop();
-    </script>
+                    // 落下
+                    c.y += c.speed;
 
-</body>
+                    // 当たり判定
+                    if (isColliding(player, c)) {
+
+                        comments.splice(i, 1);
+                        continue;
+                    }
+
+                    // 画面外削除
+                    if (c.y - c.size / 2 > canvasA.height) {
+
+                        comments.splice(i, 1);
+                    }
+                }
+            }
+
+            // ===== 描画 =====
+            function draw() {
+
+                ctx.clearRect(0, 0, canvasA.width, canvasA.height);
+
+                // プレイヤー
+                ctx.fillStyle = "white";
+
+                ctx.fillRect(
+                    player.x - player.size / 2,
+                    player.y - player.size / 2,
+                    player.size,
+                    player.size
+                );
+
+                // コメント
+                ctx.fillStyle = "lime";
+
+                for (const c of comments) {
+
+                    ctx.fillRect(
+                        c.x - c.size / 2,
+                        c.y - c.size / 2,
+                        c.size,
+                        c.size
+                    );
+                }
+            }
+
+            // ===== ループ =====
+            function gameLoop() {
+
+                update();
+                draw();
+
+                requestAnimationFrame(gameLoop);
+            }
+
+            gameLoop();
+        </script>
+
+    </body>
 </html>
