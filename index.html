@@ -13,18 +13,28 @@
                 background: #ffa4ff;
             }
 
+            #controls {
+                position: fixed;
+                bottom: 20px;
+                width: 100%;
+                text-align: center;
+            }
+
             button {
-                display: block;
-                background: #efe78b;
+                font-size: 24px;
+                padding: 10px 20px;
+                margin: 0 20px;
             }
         </style>
     </head>
     <body>
 
-        <canvas id="canvas"></canvas>
-        <button id = "center"></button>
-        <button id = "left"></button>
-        <button id = "right"></button>
+        <canvas id = "canvas"></canvas>
+
+        <div id="controls">
+            <button id="left"></button>
+            <button id="right"></button>
+        </div>
 
         <script>
             const canvas = document.getElementById("canvas");
@@ -32,6 +42,7 @@
 
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight * 0.8;
+
 
             // ===== 定数 =====
             const OBJECT_SIZE = 60;
@@ -59,21 +70,13 @@
             // 1秒ごとに生成
             setInterval(spawnComment, 1000);
 
-            let $center = document.getElementById("center");
-            let $left = document.getElementById("left");
-            let $right = document.getElementById("right");
+            const leftBtn = document.getElementById("left");
+            const rightBtn = document.getElementById("right");
 
-            // タップしやすいようにボタンを大きくする（地味に重要）
-            let arr = [$center, $left, $right];
-            for(let i=0; i<3; i++){
-                arr[i].style.width = canvas.width / 3;
-                arr[i].style.height = window.innerHeight - canvas.height;
-            }
-
-            $left.addEventListener('click', (e) => {
+            leftBtn.addEventListener('click', (e) => {
                 player.x -= 100;
             });
-            $right.addEventListener('click', (e) => {
+            rightBtn.addEventListener('click', (e) => {
                 player.x = player.x + 100;
             });
 
