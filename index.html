@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Game</title>
+    <style>
+        body {
+        margin: 0;
+        overflow: hidden;
+        }
+        canvas {
+        background: #943737;
+        display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="game"></canvas>
+
+    <script>
+        const canvas = document.getElementById("game");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // プレイヤー
+        let player = {
+            x: canvas.width / 2,
+            y: canvas.height - 100,
+            size: 50,
+            speed: 10
+        };
+
+        // タッチ操作
+        let touchX = null;
+
+        window.addEventListener("touchmove", (e) => {
+            touchX = e.touches[0].clientX;
+        });
+
+        // ゲームループ
+        function update() {
+            if (touchX !== null) {
+                player.x = touchX;
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "white";
+            ctx.fillRect(
+                player.x - player.size / 2,
+                player.y - player.size / 2,
+                player.size,
+                player.size
+            );
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+
+</body>
+</html>
