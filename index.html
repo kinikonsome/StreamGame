@@ -8,12 +8,12 @@
                 margin: 0;
             }
 
-            #topMiddle {
+            canvas {
                 display: block;
                 background: #ffa4ff;
             }
 
-            #bottom {
+            button {
                 display: block;
                 background: #efe78b;
             }
@@ -21,30 +21,27 @@
     </head>
     <body>
 
-        <canvas id="topMiddle"></canvas>
-        <canvas id="bottom"></canvas>
+        <canvas id="canvas"></canvas>
+        <button id = "center"></button>
+        <button id = "left"></button>
+        <button id = "right"></button>
 
         <script>
-            const canvasA = document.getElementById("topMiddle");
-            const ctx = canvasA.getContext("2d");
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
 
-            canvasA.width = window.innerWidth;
-            canvasA.height = window.innerHeight * 0.8;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight * 0.8;
 
             // ===== 定数 =====
             const OBJECT_SIZE = 60;
 
             // ===== プレイヤー =====
             const player = {
-                x: canvasA.width / 2,
-                y: canvasA.height - 100,
+                x: canvas.width / 2,
+                y: canvas.height - 100,
                 size: OBJECT_SIZE
             };
-
-            // ===== タッチ操作 =====
-            window.addEventListener("touchmove", (e) => {
-                player.x = e.touches[0].clientX;
-            });
 
             // ===== コメント =====
             const comments = [];
@@ -52,7 +49,7 @@
             function spawnComment() {
 
                 comments.push({
-                    x: OBJECT_SIZE / 2 + Math.random() * (canvasA.width - OBJECT_SIZE),
+                    x: OBJECT_SIZE / 2 + Math.random() * (canvas.width - OBJECT_SIZE),
                     y: -OBJECT_SIZE,
                     size: OBJECT_SIZE,
                     speed: 5
@@ -61,6 +58,24 @@
 
             // 1秒ごとに生成
             setInterval(spawnComment, 1000);
+
+            let $center = document.getElementById("center");
+            let $left = document.getElementById("left");
+            let $right = document.getElementById("right");
+
+            // タップしやすいようにボタンを大きくする（地味に重要）
+            let arr = [$center, $left, $right];
+            for(let i=0; i<3; i++){
+                arr[i].style.width = canvas.width / 3;
+                arr[i].style.height = window.innerHeight - canvas.height;
+            }
+
+            $left.addEventListener('click', (e) => {
+                x--;
+            });
+            $right.addEventListener('click', (e) => {
+                x++;
+            });
 
             // ===== 当たり判定 =====
             function isColliding(a, b) {
@@ -89,7 +104,7 @@
                     }
 
                     // 画面外削除
-                    if (c.y - c.size / 2 > canvasA.height) {
+                    if (c.y - c.size / 2 > canvas.height) {
 
                         comments.splice(i, 1);
                     }
@@ -99,7 +114,7 @@
             // ===== 描画 =====
             function draw() {
 
-                ctx.clearRect(0, 0, canvasA.width, canvasA.height);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                 // プレイヤー
                 ctx.fillStyle = "white";
@@ -116,7 +131,7 @@
 
                 for (const c of comments) {
 
-                    ctx.fillRect(
+                    ctxA.fillRect(
                         c.x - c.size / 2,
                         c.y - c.size / 2,
                         c.size,
@@ -135,6 +150,7 @@
             }
 
             gameLoop();
+
         </script>
 
     </body>
