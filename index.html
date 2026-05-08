@@ -30,12 +30,21 @@
             const DEFAULT_SPEED = 8
 
             let speed = DEFAULT_SPEED
-            let viewer = 1
-            let catchPoint = 0;
-            let missPoint = 0;
-            let gameTimer = 0;
-            let isRage = false;
-            let rageTimer = 0;
+
+            function initGame(){
+                let viewer = 1
+                let catchPoint = 0;
+                let missPoint = 0;
+                let gameTimer = 0;
+                let isRage = false;
+                let rageTimer = 0;
+                let event = {
+                    type: null,     // "greeting", "rage", null
+                    success: false
+                };
+                let eventTimer = 0;
+                const comments = [];
+            }
 
             /* =========================
             キャンバス設定
@@ -77,20 +86,10 @@
             ========================= */
             let moveLeft = false;
             let moveRight = false;
-
-            /* =========================
-            イベント
-            ========================= */
-            let event = {
-                type: null,     // "greeting", "rage", null
-                success: false
-            };
-            let eventTimer = 0;
             
             /* =========================
             コメント
             ========================= */
-            const comments = [];
             function spawnComment(isGreeting) {
                 if (gameTimer > 0) {
                     comments.push({
@@ -101,8 +100,6 @@
                     });
                 }   
             }
-
-            // setInterval(() => spawnComment(false), 1000 * viewer);
 
             /* =========================
             当たり判定
@@ -307,7 +304,7 @@
                     } else if (event.type === "rage") {
                         event.success = true;
                     } else if (gameTimer <= 0) {
-                        gameTimer = 3600;
+                        initGame();
                     }
                 }
             });
