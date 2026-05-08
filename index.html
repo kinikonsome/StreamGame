@@ -27,7 +27,7 @@
         </canvas>
         <script>
             const OBJECT_SIZE = 60
-            const DEFAULT_SPEED = 4
+            const DEFAULT_SPEED = 8
 
             let speed = DEFAULT_SPEED
             let viewer = 1
@@ -128,13 +128,13 @@
             更新
             ========================= */
             function update() {
-                if ((gameTimer + 1) % Math.floor(60 / viewer) === 0) {
+                if ((gameTimer + 1) % 60 === 0) {
                     spawnComment(false);
                 }
 
                 // 移動
-                if (moveLeft) player.x -= speed;
-                if (moveRight) player.x += speed;
+                if (moveLeft) player.x -= 2*speed;
+                if (moveRight) player.x += 2*speed;
             
                 // 画面外制限
                 player.x = Math.max(player.size / 2, player.x);
