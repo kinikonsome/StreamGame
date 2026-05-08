@@ -128,7 +128,7 @@
             更新
             ========================= */
             function update() {
-                if ((gameTimer + 1) % (60 / viewer) === 0) {
+                if ((gameTimer + 1) % Math.floor(60 / viewer) === 0) {
                     spawnComment(false);
                 }
 
