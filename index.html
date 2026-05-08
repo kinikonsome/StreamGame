@@ -77,7 +77,7 @@
             イベント
             ========================= */
             let event = {
-                type: "rage",     // "greeting", "rage", null
+                type: null,     // "greeting", "rage", null
                 success: false
             };
             let eventTimer = 180;
@@ -139,6 +139,7 @@
             
                     if (c.y > mainCanvas.height) {
                         comments.splice(i, 1);
+                        event = {type: "rage", success: false};
                     }
                 }
 
