@@ -27,7 +27,7 @@
         </canvas>
         <script>
             const OBJECT_SIZE = 60
-            const DEFAULT_SPEED = 8
+            const DEFAULT_SPEED = 4
 
             let speed = DEFAULT_SPEED
             let viewer = 1
@@ -128,7 +128,7 @@
             更新
             ========================= */
             function update() {
-                if ((gameTimer + 1) % Math.floor(600 / viewer) === 0) {
+                if ((gameTimer + 1) % Math.floor(60 / viewer) === 0) {
                     spawnComment(false);
                 }
 
