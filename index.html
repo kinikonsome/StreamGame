@@ -33,6 +33,7 @@
             let viewer = 1
             let catchPoint = 0;
             let missPoint = 0;
+            let gameTimer = 0;
             let isRage = false;
             let rageTimer = 0;
 
@@ -91,15 +92,17 @@
             ========================= */
             const comments = [];
             function spawnComment(isGreeting) {
-                comments.push({
-                    x: (OBJECT_SIZE / 2) + Math.random() * (mainCanvas.width - OBJECT_SIZE),
-                    y: -OBJECT_SIZE,
-                    size: OBJECT_SIZE,
-                    greeting: isGreeting
-                });
+                if (isGame) {
+                    comments.push({
+                        x: (OBJECT_SIZE / 2) + Math.random() * (mainCanvas.width - OBJECT_SIZE),
+                        y: -OBJECT_SIZE,
+                        size: OBJECT_SIZE,
+                        greeting: isGreeting
+                    });
+                }   
             }
-            
-            setInterval(() => spawnComment(false), 1000);
+
+            setInterval(() => spawnComment(false), 1000 * viewer);
 
             /* =========================
             当たり判定
@@ -143,6 +146,7 @@
                         missPoint += 1
                         if (c.greeting) {
                             missPoint += 3
+                            gametime += 300
                         }
                         if (isRage) {
                             isRage = false
@@ -220,7 +224,6 @@
                 for (const c of comments) {
                     if (c.greeting) {
                         mainCtx.fillStyle = "red";
-                        console.log("greeting!");
                     } else {
                         mainCtx.fillStyle = "lime";
                     }
@@ -268,6 +271,8 @@
                     uiCtx.fillText("挨拶！", w * 0.5, h / 2);
                 } else if (event.type === "rage") {
                     uiCtx.fillText("キレる！", w * 0.5, h / 2);
+                } else if (gameTimer <= 0) {
+                    uiCtx.fillText("スタート！", w * 0.5, h / 2);
                 }
 
             }
@@ -292,6 +297,8 @@
                         event.success = true;
                     } else if (event.type === "rage") {
                         event.success = true;
+                    }　else if (gameTimer <= 0) {
+                        gameTimer = 3600;
                     }
                 }
             });
