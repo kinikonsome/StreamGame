@@ -32,6 +32,8 @@
             const OBJECT_SIZE = 60
             const DEFAULT_SPEED = 8
 
+            let speed = DEFAULT_SPEED
+
             const mainCanvas = document.getElementById("mainCanvas");
             const mainCtx = mainCanvas.getContext("2d");
             
@@ -74,13 +76,15 @@
             /* =========================
             イベント
             ========================= */
-            let isEventActive = false;
+            let event = {
+                type: "rage",     // "greeting", "rage", null
+                success: false
+            };
             let eventTimer = 0;
-
-            setInterval(() => {
-                isEventActive = true;
-                eventTimer = 180; // 約3秒（60fps想定）
-            }, 5000);
+            let isRage = false;
+            let rageTimer = 0;
+            let consecutiveCatch = 0;
+            let consecutiveMiss = 0;
             
             /* =========================
             コメント
@@ -138,11 +142,32 @@
                     }
                 }
 
-                // イベント
-                if (isEventActive) {
+
+                // イベント.
+                // カウントダウン
+                if (isRage){
+                    rageTimer--;
+                    if (rageTimer <= 0) {
+                        isRage = false;
+                        speed = DEFAULT_SPEED
+                    }
+                }
+                if (event.type != null) {
                     eventTimer--;
                     if (eventTimer <= 0) {
-                        isEventActive = false;
+                        event.type = null;
+                    }
+                }
+                if (event.success){
+                    // 挨拶イベント.
+                    if (event.type === "greeting") {
+                        event = {type: null, success: false};
+                        
+                    } else if (event.type === "rage") {
+                        event = {type: null, success: false};
+                        isRage = true
+                        rageTimer = 600
+                        speed *= 2
                     }
                 }
             }
@@ -207,8 +232,10 @@
                 uiCtx.fillText("<", w * 0.125, h / 2);
                 uiCtx.fillText(">", w * 0.875, h / 2);
                 uiCtx.textAlign = "center";
-                if (isEventActive) {
+                if (event.type === "greeting") {
                     uiCtx.fillText("挨拶！", w * 0.5, h / 2);
+                } else if (event.type === "rage") {
+                    uiCtx.fillText("キレる！", w * 0.5, h / 2);
                 }
 
             }
@@ -228,6 +255,12 @@
                     moveLeft = true;
                 } else if (x > w * 0.75) {
                     moveRight = true;
+                } else  if (x >= w * 0.25 && x <= w * 0.75) {
+                    if (event.type === "greeting") {
+                        event.success = true;
+                    } else if (event.type === "rage") {
+                        event.success = true;
+                    }
                 }
             });
             
