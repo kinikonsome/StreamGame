@@ -217,9 +217,12 @@
                 );
             
                 // コメント
-                mainCtx.fillStyle = "lime";
-            
                 for (const c of comments) {
+                    if (c.greeting) {
+                        mainCtx.fillStyle = "red";
+                    } else {
+                        mainCtx.fillStyle = "lime";
+                    }
                     mainCtx.fillRect(
                         c.x - c.size / 2, 
                         c.y - c.size / 2, 
