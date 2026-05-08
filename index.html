@@ -128,7 +128,7 @@
             更新
             ========================= */
             function update() {
-                if (gameTimer % (60 * viewer) === 1) {
+                if (gameTimer % (60 / viewer) === 1) {
                     spawnComment(false);
                 }
 
