@@ -30,7 +30,6 @@
             const DEFAULT_SPEED = 8
 
             let speed = DEFAULT_SPEED
-
             let viewer = 1
             let catchPoint = 0;
             let missPoint = 0;
@@ -45,6 +44,7 @@
             const comments = [];
 
             function initGame(){
+                speed = DEFAULT_SPEED
                 viewer = 1
                 catchPoint = 0;
                 missPoint = 0;
@@ -128,7 +128,7 @@
             更新
             ========================= */
             function update() {
-                if ((gameTimer * viewer) % 60 === 1) {
+                if (gameTimer % (60 * viewer) === 1) {
                     spawnComment(false);
                 }
 
