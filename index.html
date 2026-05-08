@@ -31,19 +31,32 @@
 
             let speed = DEFAULT_SPEED
 
+            let viewer = 1
+            let catchPoint = 0;
+            let missPoint = 0;
+            let gameTimer = 0;
+            let isRage = false;
+            let rageTimer = 0;
+            let event = {
+                type: null,     // "greeting", "rage", null
+                success: false
+            };
+            let eventTimer = 0;
+            const comments = [];
+
             function initGame(){
-                let viewer = 1
-                let catchPoint = 0;
-                let missPoint = 0;
-                let gameTimer = 0;
-                let isRage = false;
-                let rageTimer = 0;
-                let event = {
+                viewer = 1
+                catchPoint = 0;
+                missPoint = 0;
+                gameTimer = 3600;
+                isRage = false;
+                rageTimer = 0;
+                event = {
                     type: null,     // "greeting", "rage", null
                     success: false
                 };
-                let eventTimer = 0;
-                const comments = [];
+                eventTimer = 0;
+                comments.length = 0;
             }
 
             /* =========================
