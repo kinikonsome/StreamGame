@@ -102,7 +102,7 @@
                 }   
             }
 
-            setInterval(() => spawnComment(false), 1000 * viewer);
+            // setInterval(() => spawnComment(false), 1000 * viewer);
 
             /* =========================
             当たり判定
@@ -118,7 +118,10 @@
             更新
             ========================= */
             function update() {
-            
+                if ((gameTimer * viewer) % 60 === 1) {
+                    spawnComment(false);
+                }
+
                 // 移動
                 if (moveLeft) player.x -= speed;
                 if (moveRight) player.x += speed;
