@@ -113,7 +113,7 @@
                     const c = comments[i];
                     c.y += c.speed;
             
-                    if (isColliding(playerBox, c)) {
+                    if (isColliding(player, c)) {
                         comments.splice(i, 1);
                         continue;
                     }

@@ -117,7 +117,7 @@
                     const c = comments[i];
                     c.y += c.speed;
             
-                    if (isColliding(playerBox, c)) {
+                    if (isColliding(player, c)) {
                         comments.splice(i, 1);
                         continue;
                     }
@@ -146,7 +146,6 @@
             
                 // コメント
                 mainCtx.fillStyle = "lime";
-            
                 for (const c of comments) {
                     mainCtx.fillRect(
                         c.x - c.size / 2, 
