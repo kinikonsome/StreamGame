@@ -150,6 +150,9 @@
                         comments.splice(i, 1);
                         catchPoint += 1
                         missPoint = 0
+                        if (c.greeting) {
+                            gameTimer += 300
+                        }
                         continue;
                     }
             
@@ -159,7 +162,6 @@
                         missPoint += 1
                         if (c.greeting) {
                             missPoint += 3
-                            gameTimer += 300
                         }
                         if (isRage) {
                             isRage = false
