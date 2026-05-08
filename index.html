@@ -26,9 +26,10 @@
         <canvas id="uiCanvas">
         </canvas>
         <script>
-            const OBJECT_SIZE = 60
+            const DEFAULT_SIZE = 30
             const DEFAULT_SPEED = 2
 
+            let objectSize = DEFAULT_SIZE
             let speed = DEFAULT_SPEED
             let viewer = 1
             let catchPoint = 0;
@@ -44,6 +45,7 @@
             const comments = [];
 
             function initGame(){
+                size = DEFAULT_SIZE
                 speed = DEFAULT_SPEED
                 viewer = 1
                 catchPoint = 0;
@@ -90,8 +92,7 @@
             ========================= */
             const player = {
                 x: mainCanvas.width / 2,
-                y: mainCanvas.height - (OBJECT_SIZE*2),
-                size: OBJECT_SIZE,
+                y: mainCanvas.height - (size*2),
             };
             
             /* =========================
@@ -106,9 +107,8 @@
             function spawnComment(isGreeting) {
                 if (gameTimer > 0) {
                     comments.push({
-                        x: (OBJECT_SIZE / 2) + Math.random() * (mainCanvas.width - OBJECT_SIZE),
-                        y: -OBJECT_SIZE,
-                        size: OBJECT_SIZE,
+                        x: (size / 2) + Math.random() * (mainCanvas.width - size),
+                        y: -size,
                         greeting: isGreeting
                     });
                 }   
@@ -119,8 +119,8 @@
             ========================= */
             function isColliding(a, b) {
                 return (
-                    Math.abs(a.x - b.x) < (a.size + b.size) / 2 &&
-                    Math.abs(a.y - b.y) < (a.size + b.size) / 2
+                    Math.abs(a.x - b.x) < size &&
+                    Math.abs(a.y - b.y) < size
                 );
             }
             
@@ -128,6 +128,7 @@
             更新
             ========================= */
             function update() {
+
                 if ((gameTimer + 1) % 60 === 0) {
                     spawnComment(false);
                 }
@@ -137,8 +138,8 @@
                 if (moveRight) player.x += 2*speed;
             
                 // 画面外制限
-                player.x = Math.max(player.size / 2, player.x);
-                player.x = Math.min(mainCanvas.width - player.size / 2, player.x);
+                player.x = Math.max(size / 2, player.x);
+                player.x = Math.min(mainCanvas.width - size / 2, player.x);
             
                 // コメント処理
                 for (let i = comments.length - 1; i >= 0; i--) {
@@ -235,10 +236,10 @@
                 // プレイヤー
                 mainCtx.fillStyle = "white";
                 mainCtx.fillRect(
-                    player.x - player.size / 2,
-                    player.y - player.size / 2,
-                    player.size,
-                    player.size
+                    player.x - size / 2,
+                    player.y - size / 2,
+                    size,
+                    size
                 );
             
                 // コメント
@@ -249,10 +250,10 @@
                         mainCtx.fillStyle = "lime";
                     }
                     mainCtx.fillRect(
-                        c.x - c.size / 2, 
-                        c.y - c.size / 2, 
-                        c.size, 
-                        c.size
+                        c.x - size / 2, 
+                        c.y - size / 2, 
+                        size, 
+                        size
                     );
                 }
             }
