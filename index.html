@@ -1,158 +1,222 @@
 <!DOCTYPE html>
-<html lang="ja">
-    <head>
-        <meta charset="UTF-8">
-        <title>Test Game</title>
-        <style>
-            body {
-                margin: 0;
-            }
+    <html>
 
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+        body {
+                margin: 0;
+                overflow: hidden;
+                background: black;
+            }
+        
             canvas {
                 display: block;
-                background: #ffa4ff;
-            }
-
-            #controls {
-                position: flex;
-                bottom: 0px;
-                width: 100%;
-            }
-
-            button {
-                width: 30vw;
-                height: 34vw;
             }
         </style>
     </head>
+
     <body>
-
-        <canvas id = "canvas"></canvas>
-
-        <div id="controls">
-            <button id="left"></button>
-            <button id="right"></button>
-        </div>
-
+        <canvas id="mainCanvas">
+        </canvas>
+        <canvas id="uiCanvas">
+        </canvas>
         <script>
-            const canvas = document.getElementById("canvas");
-            const ctx = canvas.getContext("2d");
+            /* =========================
+            キャンバス設定
+            ========================= */
+            const OBJECT_SIZE = 60
+            const DEFAULT_SPEED = 8
 
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight * 0.8;
-
-
-            // ===== 定数 =====
-            const OBJECT_SIZE = 60;
-
-            // ===== プレイヤー =====
+            const mainCanvas = document.getElementById("mainCanvas");
+            const mainCtx = mainCanvas.getContext("2d");
+            
+            const uiCanvas = document.getElementById("uiCanvas");
+            const uiCtx = uiCanvas.getContext("2d");
+            
+            function resize() {
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+            
+                const uiHeight = h * 0.2;
+                const mainHeight = h * 0.8;
+            
+                mainCanvas.width = w;
+                mainCanvas.height = mainHeight;
+            
+                uiCanvas.width = w;
+                uiCanvas.height = uiHeight;
+            }
+            
+            resize();
+            window.addEventListener("resize", resize);
+            
+            /* =========================
+            プレイヤー
+            ========================= */
             const player = {
-                x: canvas.width / 2,
-                y: canvas.height - 100,
-                size: OBJECT_SIZE
+                x: mainCanvas.width / 2,
+                y: mainCanvas.height - (OBJECT_SIZE*2),
+                size: OBJECT_SIZE,
+                speed: DEFAULT_SPEED
             };
-
-            // ===== コメント =====
+            
+            /* =========================
+            入力状態
+            ========================= */
+            let moveLeft = false;
+            let moveRight = false;
+            
+            /* =========================
+            コメント
+            ========================= */
             const comments = [];
-
+            
             function spawnComment() {
-
+            
                 comments.push({
-                    x: OBJECT_SIZE / 2 + Math.random() * (canvas.width - OBJECT_SIZE),
+                    x: (OBJECT_SIZE / 2) + Math.random() * (mainCanvas.width - OBJECT_SIZE),
                     y: -OBJECT_SIZE,
                     size: OBJECT_SIZE,
-                    speed: 5
+                    speed: DEFAULT_SPEED
                 });
             }
-
-            // 1秒ごとに生成
+            
             setInterval(spawnComment, 1000);
-
-            const leftBtn = document.getElementById("left");
-            const rightBtn = document.getElementById("right");
-
-            leftBtn.addEventListener('click', (e) => {
-                player.x -= 100;
-            });
-            rightBtn.addEventListener('click', (e) => {
-                player.x = player.x + 100;
-            });
-
-            // ===== 当たり判定 =====
+            
+            /* =========================
+            当たり判定
+            ========================= */
             function isColliding(a, b) {
-
                 return (
                     Math.abs(a.x - b.x) < (a.size + b.size) / 2 &&
                     Math.abs(a.y - b.y) < (a.size + b.size) / 2
                 );
             }
-
-            // ===== 更新 =====
+            
+            /* =========================
+            更新
+            ========================= */
             function update() {
-
+            
+                // 移動
+                if (moveLeft) player.x -= player.speed;
+                if (moveRight) player.x += player.speed;
+            
+                // 画面外制限
+                player.x = Math.max(player.size / 2, player.x);
+                player.x = Math.min(mainCanvas.width - player.size / 2, player.x);
+            
+                // コメント処理
                 for (let i = comments.length - 1; i >= 0; i--) {
-
+            
                     const c = comments[i];
-
-                    // 落下
                     c.y += c.speed;
-
-                    // 当たり判定
-                    if (isColliding(player, c)) {
-
+            
+                    if (isColliding(playerBox, c)) {
                         comments.splice(i, 1);
                         continue;
                     }
-
-                    // 画面外削除
-                    if (c.y - c.size / 2 > canvas.height) {
-
+            
+                    if (c.y > mainCanvas.height) {
                         comments.splice(i, 1);
                     }
                 }
             }
-
-            // ===== 描画 =====
-            function draw() {
-
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+            
+            /* =========================
+            描画（メイン）
+            ========================= */
+            function drawMain() {
+            
+                mainCtx.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+            
                 // プレイヤー
-                ctx.fillStyle = "white";
-
-                ctx.fillRect(
+                mainCtx.fillStyle = "white";
+                mainCtx.fillRect(
                     player.x - player.size / 2,
                     player.y - player.size / 2,
                     player.size,
                     player.size
                 );
-
+            
                 // コメント
-                ctx.fillStyle = "lime";
-
+                mainCtx.fillStyle = "lime";
+            
                 for (const c of comments) {
-
-                    ctx.fillRect(
-                        c.x - c.size / 2,
-                        c.y - c.size / 2,
-                        c.size,
+                    mainCtx.fillRect(
+                        c.x - c.size / 2, 
+                        c.y - c.size / 2, 
+                        c.size, 
                         c.size
                     );
                 }
             }
-
-            // ===== ループ =====
+            
+            /* =========================
+            描画（UI）
+            ========================= */
+            function drawUI() {
+            
+                uiCtx.clearRect(0, 0, uiCanvas.width, uiCanvas.height);
+            
+                const w = uiCanvas.width;
+                const h = uiCanvas.height;
+            
+                // 左ボタン
+                uiCtx.fillStyle = moveLeft ? "#555" : "#333";
+                uiCtx.fillRect(0, 0, w * 0.25, h);
+            
+                // 右ボタン
+                uiCtx.fillStyle = moveRight ? "#555" : "#333";
+                uiCtx.fillRect(w * 0.75, 0, w * 0.25, h);
+            
+                // 中央（イベント用）
+                uiCtx.fillStyle = "#222";
+                uiCtx.fillRect(w * 0.25, 0, w * 0.5, h);
+            
+                // テキスト
+                uiCtx.fillStyle = "white";
+                uiCtx.font = "20px sans-serif";
+            
+                uiCtx.fillText("◀", w * 0.1, h / 2);
+                uiCtx.fillText("▶", w * 0.85, h / 2);
+                uiCtx.fillText("EVENT", w * 0.45, h / 2);
+            }
+            
+            /* =========================
+            タッチ操作（UIキャンバス）
+            ========================= */
+            uiCanvas.addEventListener("touchstart", (e) => {
+                const touch = e.touches[0];
+                const x = touch.clientX;
+            
+                const w = uiCanvas.width;
+            
+                if (x < w * 0.25) {
+                    moveLeft = true;
+                } else if (x > w * 0.75) {
+                    moveRight = true;
+                }
+            });
+            
+            uiCanvas.addEventListener("touchend", () => {
+                moveLeft = false;
+                moveRight = false;
+            });
+            
+            /* =========================
+            ループ
+            ========================= */
             function gameLoop() {
-
                 update();
-                draw();
-
+                drawMain();
+                drawUI();
                 requestAnimationFrame(gameLoop);
             }
-
+            
             gameLoop();
-
         </script>
-
     </body>
+
 </html>
