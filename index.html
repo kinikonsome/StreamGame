@@ -158,6 +158,9 @@
                 }
 
                 // カウントダウン処理.
+                if (gameTimer > 0){
+                    rageTimer--;
+                }
                 if (isRage){
                     rageTimer--;
                     if (rageTimer <= 0) {
