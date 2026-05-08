@@ -8,10 +8,14 @@
                 margin: 0;
                 overflow: hidden;
                 background: black;
+                -webkit-user-select: none;
+                user-select: none;
+                -webkit-touch-callout: none;
             }
         
             canvas {
                 display: block;
+                touch-action: none;
             }
         </style>
     </head>
@@ -176,18 +180,23 @@
                 uiCtx.fillRect(w * 0.25, 0, w * 0.5, h);
             
                 // テキスト
+                uiCtx.textAlign = "center";
+                uiCtx.textBaseline = "middle";
                 uiCtx.fillStyle = "white";
-                uiCtx.font = "20px sans-serif";
+                uiCtx.font = "bold 28px sans-serif";
             
-                uiCtx.fillText("◀", w * 0.1, h / 2);
-                uiCtx.fillText("▶", w * 0.85, h / 2);
-                uiCtx.fillText("EVENT", w * 0.45, h / 2);
+                uiCtx.fillText("<", w * 0.125, h / 2);
+                uiCtx.fillText(">", w * 0.875, h / 2);
+                uiCtx.textAlign = "center";
+                uiCtx.fillText("EVENT", w * 0.5, h / 2);
             }
             
             /* =========================
             タッチ操作（UIキャンバス）
             ========================= */
             uiCanvas.addEventListener("touchstart", (e) => {
+                e.preventDefault();
+
                 const touch = e.touches[0];
                 const x = touch.clientX;
             
