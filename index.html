@@ -193,7 +193,9 @@
                 if (event.type != null) {
                     eventTimer--;
                     if (eventTimer <= 0) {
-                        if (event.type === "greeting" && !event.success)
+                        if (event.type === "greeting" && !event.success) {
+                            missPoint += 3
+                        }
                         event.type = null;
                     }
                 }
