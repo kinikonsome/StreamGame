@@ -193,6 +193,7 @@
                 if (event.type != null) {
                     eventTimer--;
                     if (eventTimer <= 0) {
+                        if (event.type === "greeting" && !event.success)
                         event.type = null;
                     }
                 }
