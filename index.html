@@ -92,7 +92,7 @@
             ========================= */
             const comments = [];
             function spawnComment(isGreeting) {
-                if (isGame) {
+                if (gametimer > 0) {
                     comments.push({
                         x: (OBJECT_SIZE / 2) + Math.random() * (mainCanvas.width - OBJECT_SIZE),
                         y: -OBJECT_SIZE,
