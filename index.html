@@ -92,7 +92,7 @@
             ========================= */
             const comments = [];
             function spawnComment(isGreeting) {
-                if (gametimer > 0) {
+                if (gameTimer > 0) {
                     comments.push({
                         x: (OBJECT_SIZE / 2) + Math.random() * (mainCanvas.width - OBJECT_SIZE),
                         y: -OBJECT_SIZE,
@@ -146,7 +146,7 @@
                         missPoint += 1
                         if (c.greeting) {
                             missPoint += 3
-                            gametime += 300
+                            gameTimer += 300
                         }
                         if (isRage) {
                             isRage = false
