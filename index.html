@@ -70,6 +70,17 @@
             ========================= */
             let moveLeft = false;
             let moveRight = false;
+
+            /* =========================
+            イベント
+            ========================= */
+            let isEventActive = false;
+            let eventTimer = 0;
+
+            setInterval(() => {
+                isEventActive = true;
+                eventTimer = 180; // 約3秒（60fps想定）
+            }, 5000);
             
             /* =========================
             コメント
@@ -124,6 +135,14 @@
             
                     if (c.y > mainCanvas.height) {
                         comments.splice(i, 1);
+                    }
+                }
+
+                // イベント
+                if (isEventActive) {
+                    eventTimer--;
+                    if (eventTimer <= 0) {
+                        isEventActive = false;
                     }
                 }
             }
@@ -188,7 +207,10 @@
                 uiCtx.fillText("<", w * 0.125, h / 2);
                 uiCtx.fillText(">", w * 0.875, h / 2);
                 uiCtx.textAlign = "center";
-                uiCtx.fillText("EVENT", w * 0.5, h / 2);
+                if (isEventActive) {
+                    uiCtx.fillText("挨拶！", w * 0.5, h / 2);
+                }
+
             }
             
             /* =========================
