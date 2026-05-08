@@ -27,7 +27,7 @@
         </canvas>
         <script>
             const OBJECT_SIZE = 60
-            const DEFAULT_SPEED = 4
+            const DEFAULT_SPEED = 2
 
             let speed = DEFAULT_SPEED
             let viewer = 1
@@ -133,8 +133,8 @@
                 }
 
                 // 移動
-                if (moveLeft) player.x -= 4*speed;
-                if (moveRight) player.x += 4*speed;
+                if (moveLeft) player.x -= 2*speed;
+                if (moveRight) player.x += 2*speed;
             
                 // 画面外制限
                 player.x = Math.max(player.size / 2, player.x);
