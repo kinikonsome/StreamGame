@@ -26,14 +26,19 @@
         <canvas id="uiCanvas">
         </canvas>
         <script>
-            /* =========================
-            キャンバス設定
-            ========================= */
             const OBJECT_SIZE = 60
             const DEFAULT_SPEED = 8
 
             let speed = DEFAULT_SPEED
+            let viewer = 1
+            let catchPoint = 0;
+            let missPoint = 0;
+            let isRage = false;
+            let rageTimer = 0;
 
+            /* =========================
+            キャンバス設定
+            ========================= */
             const mainCanvas = document.getElementById("mainCanvas");
             const mainCtx = mainCanvas.getContext("2d");
             
@@ -64,7 +69,6 @@
                 x: mainCanvas.width / 2,
                 y: mainCanvas.height - (OBJECT_SIZE*2),
                 size: OBJECT_SIZE,
-                speed: speed
             };
             
             /* =========================
@@ -80,29 +84,23 @@
                 type: null,     // "greeting", "rage", null
                 success: false
             };
-            let eventTimer = 180;
-            let isRage = false;
-            let rageTimer = 0;
-            let consecutiveCatch = 0;
-            let consecutiveMiss = 0;
+            let eventTimer = 0;
             
             /* =========================
             コメント
             ========================= */
             const comments = [];
-            
-            function spawnComment() {
-            
+            function spawnComment(isGreeting) {
                 comments.push({
                     x: (OBJECT_SIZE / 2) + Math.random() * (mainCanvas.width - OBJECT_SIZE),
                     y: -OBJECT_SIZE,
                     size: OBJECT_SIZE,
-                    speed: speed
+                    greeting: isGreeting
                 });
             }
             
-            setInterval(spawnComment, 1000);
-            
+            setInterval(() => spawnComment(false), 1000);
+
             /* =========================
             当たり判定
             ========================= */
@@ -119,8 +117,8 @@
             function update() {
             
                 // 移動
-                if (moveLeft) player.x -= player.speed;
-                if (moveRight) player.x += player.speed;
+                if (moveLeft) player.x -= speed;
+                if (moveRight) player.x += speed;
             
                 // 画面外制限
                 player.x = Math.max(player.size / 2, player.x);
@@ -130,22 +128,32 @@
                 for (let i = comments.length - 1; i >= 0; i--) {
             
                     const c = comments[i];
-                    c.y += c.speed;
+                    c.y += speed;
             
                     if (isColliding(player, c)) {
                         comments.splice(i, 1);
+                        catchPoint += 1
+                        missPoint = 0
                         continue;
                     }
             
                     if (c.y > mainCanvas.height) {
                         comments.splice(i, 1);
-                        event = {type: "rage", success: false};
+                        catchPoint = 0
+                        missPoint += 1
+                        if (c.Greeting) {
+                            missPoint += 3
+                        }
+                        if (isRage) {
+                            isRage = false
+                            speed = DEFAULT_SPEED
+                            missPoint += 3
+                            viewer -= 1
+                        }
                     }
                 }
 
-
-                // イベント.
-                // カウントダウン
+                // カウントダウン処理.
                 if (isRage){
                     rageTimer--;
                     if (rageTimer <= 0) {
@@ -159,11 +167,30 @@
                         event.type = null;
                     }
                 }
+                
+                // イベント発生処理.
+                if (catchPoint >= 10){
+                    viewer += 1
+                    catchPoint = 0
+                    event = {type: "greeting", success: false};
+                    eventTimer = 180;
+                } else if (missPoint >= 3){
+                    viewer -= 1
+                    missPoint = 0
+                    event = {type: "rage", success: false};
+                    eventTimer = 180;
+                }
+
+                // イベント成功処理
                 if (event.success){
                     // 挨拶イベント.
                     if (event.type === "greeting") {
                         event = {type: null, success: false};
-                        
+                        if (Math.random() >= 0.5) {
+                            spawnComment(true);
+                        } else {
+                            missPoint += 3
+                        }
                     } else if (event.type === "rage") {
                         event = {type: null, success: false};
                         isRage = true
