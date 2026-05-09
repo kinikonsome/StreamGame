@@ -34,6 +34,7 @@
             let viewer = 1
             let catchPoint = 0;
             let missPoint = 0;
+            let score = 0;
             let gameTimer = 0;
             let isRage = false;
             let rageTimer = 0;
@@ -50,6 +51,7 @@
                 viewer = 1
                 catchPoint = 0;
                 missPoint = 0;
+                score = 0;
                 gameTimer = 3600;
                 isRage = false;
                 rageTimer = 0;
@@ -156,6 +158,9 @@
                             gameTimer += 600
                             size *= 1.1
                             player.y = mainCanvas.height - size
+                            score += 500 * (1 + (Math.log(math)/math.log(10)))
+                        } else {
+                            score += 100 * (1 + (Math.log(math)/math.log(10)))
                         }
                         continue;
                     }
@@ -262,6 +267,30 @@
                         size
                     );
                 }
+
+                // ===== HUD（画面上部） =====
+                const w = mainCanvas.width;
+                const h = mainCanvas.height;
+
+                mainCtx.textAlign = "left";
+                mainCtx.textBaseline = "top";
+                mainCtx.fillStyle = "white";
+
+                // フォントサイズも比率で
+                mainCtx.font = `bold ${h * 0.04}px sans-serif`;
+
+                const marginX = w * 0.02;
+                const marginY = h * 0.02;
+                const lineGap = h * 0.06;
+
+                // スコア
+                mainCtx.fillText("Score: " + Math.floor(score), marginX, marginY);
+
+                // 同接
+                mainCtx.fillText("Viewer: " + viewer, marginX, marginY + lineGap);
+
+                // 時間
+                mainCtx.fillText("Time: " + formatTime(gameTimer), marginX, marginY + lineGap * 2);
             }
             
             /* =========================

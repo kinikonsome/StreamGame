@@ -3,3 +3,16 @@
 // git push
 
 
+                mainCtx.textAlign = "left";
+                mainCtx.textBaseline = "top";
+                mainCtx.fillStyle = "white";
+                mainCtx.font = "bold 20px sans-serif";
+
+                // スコア（まだなら追加）
+                mainCtx.fillText("Score: " + score, 10, 10);
+
+                // 同接
+                mainCtx.fillText("Viewer: " + viewer, 10, 35);
+
+                // 時間
+                mainCtx.fillText("Time: " + formatTime(gameTimer), 10, 60);
