@@ -279,18 +279,15 @@
                 // フォントサイズも比率で
                 mainCtx.font = `bold ${h * 0.04}px sans-serif`;
 
-                const marginX = w * 0.02;
-                const marginY = h * 0.02;
-                const lineGap = h * 0.06;
+                // 時間
+                mainCtx.fillText("Time: " + Math.floor(gameTimer/60), 0, 0);
 
                 // スコア
-                mainCtx.fillText("Score: " + Math.floor(score), marginX, marginY);
+                mainCtx.fillText("Score: " + Math.floor(score), w * (1 / 3), 0);
 
                 // 同接
-                mainCtx.fillText("Viewer: " + viewer, marginX, marginY + lineGap);
+                mainCtx.fillText("Viewer: " + viewer, w * (2 / 3), 0);
 
-                // 時間
-                mainCtx.fillText("Time: " + Math.floor(gameTimer/60), marginX, marginY + lineGap * 2);
             }
             
             /* =========================
