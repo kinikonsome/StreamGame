@@ -280,13 +280,13 @@
                 mainCtx.font = `bold ${h * 0.04}px sans-serif`;
 
                 // 時間
-                mainCtx.fillText("Time: " + Math.floor(gameTimer/60), w * (-1 / 3), 0);
+                mainCtx.fillText("Time: " + Math.floor(gameTimer/60), 0, 0);
 
                 // スコア
-                mainCtx.fillText("Score: " + Math.floor(score), 0, 0);
+                mainCtx.fillText("Score: " + Math.floor(score), w * (1 / 3), 0);
 
                 // 同接
-                mainCtx.fillText("Viewer: " + viewer, w * (1 / 3), 0);
+                mainCtx.fillText("Viewer: " + viewer, w * (2 / 3), 0);
 
             }
             
